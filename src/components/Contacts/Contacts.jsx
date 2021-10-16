@@ -1,0 +1,29 @@
+import { useSelector } from "react-redux";
+import { Item } from "./Contacts.styled";
+import Contact from "../Contact";
+import makeFilteredContacts from "helpers/makeFilteredContacts";
+import { contactsSelectors } from "redux/contacts";
+
+export default function Contacts() {
+  const filter = useSelector(contactsSelectors.getFilterFromState);
+  const contacts = useSelector(contactsSelectors.getContactsFromState);
+  const emptyFilter = filter.trim() === "";
+
+  return (
+    <>
+      {emptyFilter
+        ? contacts.map((contact) => (
+            <Item key={contact.id}>
+              <Contact props={contact} />
+            </Item>
+          ))
+        : makeFilteredContacts(contacts, filter.toLowerCase()).map(
+            (contact) => (
+              <Item key={contact.id}>
+                <Contact props={contact} />
+              </Item>
+            )
+          )}
+    </>
+  );
+}
