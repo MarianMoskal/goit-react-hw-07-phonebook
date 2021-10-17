@@ -1,10 +1,14 @@
-import { Item, Name, Button } from "./Contact.styled";
-import { useDispatch } from "react-redux";
-import { removeContact } from "redux/contacts/contacts-operations";
+import { Item, Name, Button, Spinner } from "./Contact.styled";
 import PropTypes from "prop-types";
+import { useDeleteContactByIdMutation } from "API/contacts-api";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import React from "react";
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 export default function Contact({ props: { name, number, id } }) {
-  const dispatch = useDispatch();
+  const [deleteContact, { isLoading }] = useDeleteContactByIdMutation();
 
   return (
     <>
@@ -17,8 +21,19 @@ export default function Contact({ props: { name, number, id } }) {
         type="button"
         id={id}
         value="Delete"
-        onClick={(e) => dispatch(removeContact(e.target.id))}
+        onClick={(e) => deleteContact(e.target.id)}
+        disabled={isLoading}
       />
+
+      <Spinner>
+        <Loader
+          visible={isLoading}
+          type="Circles"
+          color="#d0ff00"
+          height={20}
+          width={20}
+        />
+      </Spinner>
     </>
   );
 }

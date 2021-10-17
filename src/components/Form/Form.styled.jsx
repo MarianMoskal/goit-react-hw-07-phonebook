@@ -35,4 +35,9 @@ const FormS = styled.form`
   border: 1px solid black;
 `;
 
-export { Label, Input, Submit, FormS };
+const Spinner = styled.span`
+  display: inline-block;
+  margin-left: 10px;
+`;
+
+export { Label, Input, Submit, FormS, Spinner };

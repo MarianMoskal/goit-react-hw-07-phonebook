@@ -1,35 +1,76 @@
-import axios from "axios";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// axios.defaults.baseURL = "http://localhost:4000/contacts";
-axios.defaults.baseURL = "https://616b285816e7120017fa1251.mockapi.io/contacts";
+// Define a service using a base URL and expected endpoints
+export const contactsApi = createApi({
+  reducerPath: "contactsApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://616b285816e7120017fa1251.mockapi.io",
+  }),
+  tagTypes: ["Contacts"],
+  endpoints: (build) => ({
+    getContacts: build.query({
+      query: () => "/contacts",
+      providesTags: (result, error, arg) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Contacts", id })), "Contacts"]
+          : ["Contacts"],
+    }),
 
-export async function fetchContacts() {
-  const { data } = await axios.get();
+    addContact: build.mutation({
+      query: (body) => ({
+        url: "/contacts",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Contacts"],
+    }),
 
-  return data;
-}
+    deleteContactById: build.mutation({
+      query: (id) => ({
+        url: `/contacts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Contacts"],
+    }),
+  }),
+});
 
-export async function postContact(contact) {
-  const options = {
-    method: "POST",
-    data: contact,
-  };
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const {
+  useGetContactsQuery,
+  useAddContactMutation,
+  useDeleteContactByIdMutation,
+} = contactsApi;
 
-  const { data } = await axios(options);
-  const res = await data;
+//OLD
 
-  return res;
-}
+// import axios from "axios";
 
-export async function deleteContact(id) {
-  // const stringifyId = JSON.stringify(id)
-  // const options = {
-  //     method: "DELETE",
-  //     data: `/${id}`,
-  // }
+// // axios.defaults.baseURL = "http://localhost:4000/contacts";
+// axios.defaults.baseURL = "https://616b285816e7120017fa1251.mockapi.io/contacts";
 
-  const res = await axios(`/${id}`, { method: "DELETE" });
-  // const res = await data;
+// export async function fetchContacts() {
+//   const { data } = await axios.get();
 
-  return res;
-}
+//   return data;
+// }
+
+// export async function postContact(contact) {
+//   const options = {
+//     method: "POST",
+//     data: contact,
+//   };
+
+//   const { data } = await axios(options);
+//   const res = await data;
+
+//   return res;
+// }
+
+// export async function deleteContact(id) {
+
+//   const res = await axios(`/${id}`, { method: "DELETE" });
+
+//   return res;
+// }

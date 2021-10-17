@@ -20,4 +20,9 @@ const Name = styled.span`
   margin-right: 20px;
 `;
 
-export { Item, Button, Name };
+const Spinner = styled.span`
+  display: inline-block;
+  margin-left: 10px;
+`;
+
+export { Item, Button, Name, Spinner };

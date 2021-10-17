@@ -3,10 +3,11 @@ import { Item } from "./Contacts.styled";
 import Contact from "../Contact";
 import makeFilteredContacts from "helpers/makeFilteredContacts";
 import { contactsSelectors } from "redux/contacts";
+import { useGetContactsQuery } from "API/contacts-api";
 
 export default function Contacts() {
+  const { data: contacts } = useGetContactsQuery();
   const filter = useSelector(contactsSelectors.getFilterFromState);
-  const contacts = useSelector(contactsSelectors.getContactsFromState);
   const emptyFilter = filter.trim() === "";
 
   return (
